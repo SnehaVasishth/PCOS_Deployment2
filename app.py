@@ -5,14 +5,10 @@ import numpy as np
 import pandas as pd # Import pandas
 
 # Define the expected feature names in the correct order
-# This list MUST match the column order of the DataFrame 'X' used during training
-expected_feature_order = [
-    "Age", "Weight", "Height", "Blood Group",
-    "Menstrual Cycle Interval", "Recent Weight Gain", "Skin Darkening",
-    "Hair Loss", "Acne", "Regular Fast Food Consumption", "Regular Exercise",
-    "Mood Swings", "Regular Periods", "Excessive Body/Facial Hair",
-    "Menstrual Duration (Days)"
-]
+# This list MUST match the column order of the DataFrame 'X' used during training.
+# To get the exact list, add 'print(X.columns.tolist())' in your ML script
+# right before pickling the model and copy the output here.
+expected_feature_order = ['Age', 'Weight', 'Height', 'Blood Group', 'Menstrual Cycle Interval', 'Recent Weight Gain', 'Excessive Body/Facial Hair', 'Skin Darkening', 'Hair Loss', 'Acne', 'Regular Fast Food Consumption', 'Regular Exercise', 'Mood Swings', 'Regular Periods', 'Menstrual Duration (Days)']
 
 # Load the trained model
 # This model was trained on the raw DataFrame X in your ML script
@@ -61,13 +57,16 @@ def predict():
         # The model was trained on a DataFrame with this specific column order
         input_df = pd.DataFrame([data], columns=expected_feature_order)
 
+        # --- Debugging Print ---
+        print("Input DataFrame columns:", input_df.columns.tolist())
+        # --- End Debugging Print ---
+
         # Ensure data types in the DataFrame match the types in your training DataFrame X
-        # This is especially important for categorical features like 'Blood Group'
-        # If 'Blood Group' was an object/string in training, it should be here too.
-        # Based on your ML code, it seems you might be treating these as numbers,
-        # but explicitly setting types can prevent issues.
+        # Based on your df.dtypes output, all columns are numerical (int64 or float64),
+        # so explicit casting might not be strictly necessary if JSON provides numbers.
+        # However, if you encounter type issues, you might need to cast here.
         # Example (adjust types based on your actual data in CLEAN- PCOS SURVEY SPREADSHEET.csv):
-        # input_df['Blood Group'] = input_df['Blood Group'].astype(str)
+        # input_df['Blood Group'] = input_df['Blood Group'].astype(int)
         # input_df['Menstrual Cycle Interval'] = input_df['Menstrual Cycle Interval'].astype(int)
         # ... other discrete features ...
 
@@ -94,4 +93,3 @@ def predict():
 if __name__ == '__main__':
     # Ensure debug=True is only used during development
     app.run(debug=True, port=5000)
-
